@@ -1,0 +1,55 @@
+{
+    "name": "treblle/oaas-laravel",
+    "description": "Laravel SDK for Treblle Observability as a Service (OaaS) API",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "treblle",
+        "laravel",
+        "api",
+        "intelligence",
+        "observability",
+        "monitoring",
+        "sdk"
+    ],
+    "authors": [
+        {
+            "name": "Treblle",
+            "email": "support@treblle.com",
+            "homepage": "https://treblle.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.0",
+        "mockery/mockery": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Treblle\\OaaS\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Treblle\\OaaS\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Treblle\\OaaS\\OaaSServiceProvider"
+            ],
+            "aliases": {
+                "TreblleOaaS": "Treblle\\OaaS\\Facades\\TreblleOaaS"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
