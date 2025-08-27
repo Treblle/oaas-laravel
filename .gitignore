@@ -31,3 +31,6 @@ auth.json
 CLAUDE.md
 .DS_Store
 TESTING.md
+composer.lock
+.phpunit.cache/test-results
+build/report.junit.xml

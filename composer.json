@@ -1,6 +1,6 @@
 {
     "name": "treblle/oaas-laravel",
-    "description": "Laravel SDK for Treblle Observability as a Service (OaaS) API",
+    "description": "Laravel SDK for Treblle Observability as a Service (OaaS)",
     "type": "library",
     "license": "MIT",
     "keywords": [
