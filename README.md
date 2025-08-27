@@ -10,23 +10,13 @@ Treblle is an API intelligence platfom that helps developers, teams and organiza
 
 ## Treblle Laravel OaaS SDK
 
-A Laravel SDK for the Treblle Observability as a Service (OaaS). Easily retrieve and filter requests from APIs monitored by Treblle and expose the data to your end-customers.
+A Laravel SDK for Treblle Observability as a Service (OaaS). Easily retrieve and filter requests from APIs monitored by Treblle and expose that data to your end-customers.
 
 ## Requirements
 
 - PHP 8.1 or higher
 - Laravel 10.0 or higher
 - Guzzle HTTP 7.0 or higher
-
-## Features
-
-- 🚀 **Easy Integration** - Simple Laravel service provider and facade
-- 🔍 **Powerful Filtering** - Comprehensive filtering by customers, location, methods, request params, and more
-- 📊 **Rich Data Models** - Strongly typed data objects with helpful methods
-- 🔗 **Fluent API** - Chainable query builder for intuitive filtering
-- 📄 **Pagination** - Built-in pagination support
-- 🛡️ **Type Safety** - Full PHP 8.1+ type hints and enum support
-- ⚡ **Performance** - HTTP client with configurable timeouts and connection pooling
 
 ## Installation
 
