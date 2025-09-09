@@ -1,0 +1,1298 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Treblle OaaS API",
+    "description": "Treblle Observability as a Service allows Treblle customers to expose request data to their end-users through JS-based components or an API. This Specification describes how to use the Treblle OaaS API to retrieve request data for your APIs that are monitored with Treblle.",
+    "version": "1.0.1"
+  },
+  "servers": [
+    {
+      "url": "https://api-forge.treblle.com/api/v1/"
+    }
+  ],
+  "paths": {    
+    "/workspaces/{workspaceId}/apis/{apiId}/requests": {
+      "get": {
+        "operationId": "getListOfRequestFromAnAPI",
+        "tags": [
+          "requests"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WorkspaceId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "-created_at",
+                "created_at", 
+                "path",
+                "-path",
+                "load_time",
+                "-load_time"
+              ],
+              "default": "-created_at"
+            },
+            "description": "Sort order for results. Use '-' prefix for descending order.",
+            "examples": {
+              "recent_first": {
+                "value": "-created_at",
+                "summary": "Recent to oldest by creation time"
+              },
+              "oldest_first": {
+                "value": "created_at", 
+                "summary": "Oldest to recent by creation time"
+              },
+              "path_asc": {
+                "value": "path",
+                "summary": "Path name A-Z"
+              },
+              "path_desc": {
+                "value": "-path",
+                "summary": "Path name Z-A"
+              },
+              "fastest_first": {
+                "value": "load_time",
+                "summary": "Fastest to slowest load time"
+              },
+              "slowest_first": {
+                "value": "-load_time",
+                "summary": "Slowest to fastest load time"
+              }
+            }
+          },
+          {
+            "name": "filter[external_user_id]",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter requests for a specific Customer ID. This value is whatever the Customer ID is on your end.",
+            "example": "John Doe"
+          },
+          {
+            "name": "filter[location]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact location string as show on the request details including City, State, Country",
+            "example": "Ashburn, Virginia, United States"
+          },
+          {
+            "name": "filter[params]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact or partial match of the data sent in the request payload",
+            "example": "batman"
+          },
+          {
+            "name": "filter[method]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["Get", "Post", "Put", "Patch", "Delete", "Head", "Options"]
+            },
+            "description": "Filter requests by HTTP method"
+          },
+          {
+            "name": "filter[device]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["iOS", "Android", "Desktop"]
+            },
+            "description": "Filter requests by end-user device",
+            "examples": {
+              "get_requests": {
+                "value": 1,
+                "summary": "iOS Devices"
+              },
+              "post_requests": {
+                "value": 2,
+                "summary": "Android Devices"
+              },
+              "put_requests": {
+                "value": 3,
+                "summary": "Desktop Devices"
+              }
+            }
+          },
+          {
+            "name": "filter[http_code]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 599,
+                  "description": "Specific HTTP status code"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[1-5]xx$",
+                  "description": "HTTP status code range (1xx, 2xx, 3xx, 4xx, 5xx)"
+                }
+              ]
+            },
+            "description": "Filter requests by HTTP status code. Use specific codes (200, 404) or ranges (2xx, 4xx)",
+            "examples": {
+              "success": {
+                "value": 200,
+                "summary": "200 Responses only"
+              },
+              "not_found": {
+                "value": 404,
+                "summary": "404 responses only"
+              },
+              "server_error": {
+                "value": 500,
+                "summary": "500 responses only"
+              },
+              "informational_range": {
+                "value": "1xx",
+                "summary": "All informational responses (100-199)"
+              },
+              "success_range": {
+                "value": "2xx",
+                "summary": "All successful responses (200-299)"
+              },
+              "redirection_range": {
+                "value": "3xx",
+                "summary": "All redirection responses (300-399)"
+              },
+              "client_error_range": {
+                "value": "4xx",
+                "summary": "All client error responses (400-499)"
+              },
+              "server_error_range": {
+                "value": "5xx",
+                "summary": "All server error responses (500-599)"
+              },
+              "created": {
+                "value": 201,
+                "summary": "Created responses only"
+              },
+              "bad_request": {
+                "value": 400,
+                "summary": "Bad Request responses only"
+              },
+              "unauthorized": {
+                "value": 401,
+                "summary": "Unauthorized responses only"
+              },
+              "forbidden": {
+                "value": 403,
+                "summary": "Forbidden responses only"
+              }
+            }
+          },
+          {
+            "name": "filter[time_period]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "minute,1",
+                "minute,5", 
+                "hour,24",
+                "hour,72",
+                "week,1",
+                "day,14",
+                "month,1",
+                "all",
+                "-"
+              ]
+            },
+            "description": "Filter requests by time period. Set to '-' when using time_range_start and time_range_end filters.",
+            "examples": {
+              "last_minute": {
+                "value": "minute,1",
+                "summary": "Last 1 minute"
+              },
+              "last_5_minutes": {
+                "value": "minute,5",
+                "summary": "Last 5 minutes"
+              },
+              "last_24_hours": {
+                "value": "hour,24",
+                "summary": "Last 24 hours"
+              },
+              "last_72_hours": {
+                "value": "hour,72",
+                "summary": "Last 72 hours"
+              },
+              "last_week": {
+                "value": "week,1",
+                "summary": "Last 7 days"
+              },
+              "last_14_days": {
+                "value": "day,14",
+                "summary": "Last 14 days"
+              },
+              "last_month": {
+                "value": "month,1",
+                "summary": "Last 30 days"
+              },
+              "all_time": {
+                "value": "all",
+                "summary": "All Time"
+              },
+              "custom_range": {
+                "value": "-",
+                "summary": "Custom time range (use with time_range_start and time_range_end)"
+              }
+            }
+          },
+          {
+            "name": "filter[time_range_start]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "description": "Start date for custom time range filtering in YYYY-MM-DD format. Must be used together with time_range_end. When using this filter, set time_period to '-'.",
+            "example": "2025-09-01"
+          },
+          {
+            "name": "filter[time_range_end]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "description": "End date for custom time range filtering in YYYY-MM-DD format. Must be used together with time_range_start. When using this filter, set time_period to '-'.",
+            "example": "2025-09-30"
+          },
+          {
+            "name": "filter[has_problems]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "enum": [0,1]
+            },
+            "description": "Filter requests by end-user device",
+            "examples": {
+              "without_problems": {
+                "value": 0,
+                "summary": "Requests Without Problems"
+              },
+              "with_problems": {
+                "value": 1,
+                "summary": "Requests With Problems"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["data", "links", "message", "meta"],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Request"
+                      }
+                    },
+                    "links": {
+                      "$ref": "#/components/schemas/PaginationLinks"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspaceId}/apis/{apiId}/requests/{requestId}": {
+      "get": {
+        "operationId": "getRequestDetails",
+        "tags": [
+          "requests"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/WorkspaceId"
+          },
+          {
+            "$ref": "#/components/parameters/ApiId"
+          },
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved request details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["data", "message"],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RequestDetails"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Response message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "WorkspaceId": {
+        "name": "workspaceId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Workspace Identifier in ULID format. Found on the Workspace Settings page in the Treblle Dashboard.",
+        "example": "01jc2aqyj1j19xhtt6sab87y7f"
+      },
+      "ApiId": {
+        "name": "apiId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API Identifier in ULID format. Found on the API Settings page in the Treblle Dashboard.",
+        "example": "01JAV053YPYX62CB73DVE1ZQBM"
+      },
+      "RequestId": {
+        "name": "requestId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Request Identifier in ULID format.",
+        "example": "01JAV053YPYX62CB73DVE1ZQBM"
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 20
+        },
+        "description": "Maximum number of results to return per page"
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "description": "Page number for pagination"
+      }
+    },
+    "schemas": {
+      "Request": {
+        "type": "object",
+        "required": ["attributes", "id", "type"],
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/RequestAttributes"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Request identifier in ULID format"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Request"]
+          }
+        }
+      },
+      "RequestAttributes": {
+        "type": "object",
+        "required": [
+          "api", "app_name", "created_at", "device", "endpoint", 
+          "endpoint_path", "external_user_id", "formatted_load_time", 
+          "formatted_response_size", "has_auth", "http_code", "ip_address", 
+          "latitude", "location", "log_file", "longitude", "metadata", 
+          "method", "number_of_comments", "path", "path_variables", 
+          "request_data", "request_url", "source", "threat_level"
+        ],
+        "properties": {
+          "api": {
+            "$ref": "#/components/schemas/ApiReference"
+          },
+          "app_name": {
+            "type": "string",
+            "description": "Application name and version"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Request creation timestamp"
+          },
+          "customer_display_name": {
+            "type": ["string", "null"],
+            "description": "Customer display name if available"
+          },
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          },
+          "endpoint": {
+            "$ref": "#/components/schemas/EndpointReference"
+          },
+          "endpoint_path": {
+            "type": "string",
+            "description": "Endpoint path template"
+          },
+          "external_tag_id": {
+            "type": ["string", "null"],
+            "format": "uuid",
+            "description": "External tag identifier"
+          },
+          "external_user_id": {
+            "type": ["string", "null"],
+            "description": "External user identifier"
+          },
+          "formatted_load_time": {
+            "$ref": "#/components/schemas/FormattedMetric"
+          },
+          "formatted_response_size": {
+            "$ref": "#/components/schemas/FormattedMetric"
+          },
+          "has_auth": {
+            "type": "boolean",
+            "description": "Whether the request was authenticated"
+          },
+          "http_code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599,
+            "description": "HTTP response status code"
+          },
+          "ip_address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "Client IP address"
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Geographic latitude"
+          },
+          "location": {
+            "type": "string",
+            "description": "Geographic location description"
+          },
+          "log_file": {
+            "type": "string",
+            "description": "Associated log file name"
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Geographic longitude"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Additional metadata"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["Get", "Post", "Put", "Patch", "Delete", "Head", "Options"],
+            "description": "HTTP method"
+          },
+          "number_of_comments": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of comments on this request"
+          },
+          "path": {
+            "type": "string",
+            "description": "Actual request path with resolved parameters"
+          },
+          "path_variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Path parameter mappings"
+          },
+          "request_data": {
+            "type": "object",
+            "description": "Request parameters and data"
+          },
+          "request_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Full request URL"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["Sdk", "Manual"],
+            "description": "Request source"
+          },
+          "threat_level": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"],
+            "description": "Assessed threat level"
+          }
+        }
+      },
+      "ApiReference": {
+        "type": "object",
+        "required": ["attributes", "id", "type"],
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/ApiAttributes"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "API identifier in ULID format"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Api"]
+          }
+        }
+      },
+      "ApiAttributes": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "description": "Treblle API key"
+          },
+          "api_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "API base URL"
+          },
+          "environment": {
+            "type": "string",
+            "description": "API environment"
+          },
+          "integrated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Integration timestamp"
+          },
+          "is_favourited": {
+            "type": "boolean",
+            "description": "Whether API is marked as favorite"
+          },
+          "is_private": {
+            "type": "boolean",
+            "description": "Whether API is private"
+          },
+          "issues": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of issues"
+          },
+          "name": {
+            "type": "string",
+            "description": "API name"
+          },
+          "number_of_endpoints": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of endpoints"
+          },
+          "number_of_members": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of team members"
+          },
+          "openapi_spec": {
+            "type": ["string", "null"],
+            "description": "OpenAPI specification filename"
+          },
+          "openapi_spec_uploaded_at": {
+            "type": ["string", "null"],
+            "description": "OpenAPI spec upload timestamp"
+          },
+          "request_per_minute": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Requests per minute rate"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "API quality score"
+          },
+          "sdk": {
+            "type": "string",
+            "description": "SDK used for integration"
+          },
+          "total_requests": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of requests"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          }
+        }
+      },
+      "Device": {
+        "type": "object",
+        "required": ["app", "device", "source"],
+        "properties": {
+          "app": {
+            "$ref": "#/components/schemas/AppInfo"
+          },
+          "device": {
+            "type": "string",
+            "enum": ["desktop", "mobile", "tablet"],
+            "description": "Device type"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["browser", "http-client", "mobile-app"],
+            "description": "Request source type"
+          }
+        }
+      },
+      "AppInfo": {
+        "type": "object",
+        "properties": {
+          "bundle": {
+            "type": ["string", "null"],
+            "description": "App bundle identifier"
+          },
+          "client": {
+            "type": ["string", "null"],
+            "description": "Client application name"
+          },
+          "combined": {
+            "type": "string",
+            "description": "Combined client and version info"
+          },
+          "name": {
+            "type": ["string", "null"],
+            "description": "Application name"
+          },
+          "os": {
+            "type": ["string", "null"],
+            "description": "Operating system"
+          },
+          "version": {
+            "type": ["string", "null"],
+            "description": "Application version"
+          }
+        }
+      },
+      "EndpointReference": {
+        "type": "object",
+        "required": ["attributes", "id", "type"],
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/EndpointAttributes"
+          },
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Endpoint identifier in ULID format"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Endpoint"]
+          }
+        }
+      },
+      "EndpointAttributes": {
+        "type": "object",
+        "required": ["method", "path"],
+        "properties": {
+          "alias": {
+            "type": ["string", "null"],
+            "description": "Endpoint alias"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["Get", "Post", "Put", "Patch", "Delete", "Head", "Options"],
+            "description": "HTTP method"
+          },
+          "path": {
+            "type": "string",
+            "description": "Endpoint path template"
+          }
+        }
+      },
+      "FormattedMetric": {
+        "type": "object",
+        "required": ["is_good", "unit", "value"],
+        "properties": {
+          "is_good": {
+            "type": "boolean",
+            "description": "Whether the metric value is considered good"
+          },
+          "unit": {
+            "type": "string",
+            "enum": ["milliseconds", "kilobytes", "megabytes"],
+            "description": "Measurement unit"
+          },
+          "value": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Metric value"
+          }
+        }
+      },
+      "PaginationLinks": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "First page URL"
+          },
+          "last": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "Last page URL"
+          },
+          "next": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "Next page URL"
+          },
+          "prev": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "Previous page URL"
+          }
+        }
+      },
+      "Meta": {
+        "type": "object",
+        "required": ["pagination"],
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "required": ["count", "current_page", "per_page", "total", "total_pages"],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of items in current page"
+          },
+          "current_page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Current page number"
+          },
+          "per_page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "Items per page"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of items"
+          },
+          "total_pages": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of pages"
+          }
+        }
+      },
+      "RequestDetails": {
+        "type": "object",
+        "required": ["id", "type", "attributes"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Request identifier in ULID format"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Request"]
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/RequestDetailsAttributes"
+          }
+        }
+      },
+      "RequestDetailsAttributes": {
+        "type": "object",
+        "required": [
+          "path", "endpoint_path", "path_variables", "http_code", "method",
+          "device", "source", "threat_level", "has_auth", "location",
+          "latitude", "longitude", "ip_address", "app_name", "formatted_load_time",
+          "formatted_response_size", "request_url", "request_data", "number_of_comments",
+          "log_file", "created_at", "external_user_id", "customer_display_name",
+          "external_tag_id", "endpoint", "problem", "metadata", "request", "response",
+          "server", "compliance", "security_data"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Actual request path with resolved parameters"
+          },
+          "endpoint_path": {
+            "type": "string",
+            "description": "Endpoint path template"
+          },
+          "path_variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Path parameter mappings"
+          },
+          "http_code": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599,
+            "description": "HTTP response status code"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["Get", "Post", "Put", "Patch", "Delete", "Head", "Options"],
+            "description": "HTTP method"
+          },
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          },
+          "source": {
+            "type": "string",
+            "enum": ["Sdk", "Manual"],
+            "description": "Request source"
+          },
+          "threat_level": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"],
+            "description": "Assessed threat level"
+          },
+          "has_auth": {
+            "type": "boolean",
+            "description": "Whether the request was authenticated"
+          },
+          "location": {
+            "type": "string",
+            "description": "Geographic location description"
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Geographic latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Geographic longitude"
+          },
+          "ip_address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "Client IP address"
+          },
+          "app_name": {
+            "type": "string",
+            "description": "Application name and version"
+          },
+          "formatted_load_time": {
+            "$ref": "#/components/schemas/FormattedMetric"
+          },
+          "formatted_response_size": {
+            "$ref": "#/components/schemas/FormattedMetric"
+          },
+          "request_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Full request URL"
+          },
+          "request_data": {
+            "type": "object",
+            "description": "Request payload data"
+          },
+          "number_of_comments": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of comments on this request"
+          },
+          "log_file": {
+            "type": "string",
+            "description": "Associated log file name"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Request creation timestamp"
+          },
+          "external_user_id": {
+            "type": ["string", "null"],
+            "description": "External user identifier"
+          },
+          "customer_display_name": {
+            "type": ["string", "null"],
+            "description": "Customer display name if available"
+          },
+          "external_tag_id": {
+            "type": ["string", "null"],
+            "description": "External tag identifier"
+          },
+          "endpoint": {
+            "$ref": "#/components/schemas/EndpointReference"
+          },
+          "problem": {
+            "type": ["object", "null"],
+            "description": "Problem details if any"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestMetadata"
+            },
+            "description": "Request metadata entries"
+          },
+          "request": {
+            "$ref": "#/components/schemas/RequestData"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ResponseData"
+          },
+          "server": {
+            "$ref": "#/components/schemas/ServerInfo"
+          },
+          "compliance": {
+            "$ref": "#/components/schemas/ComplianceReport"
+          },
+          "security_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecurityAudit"
+            },
+            "description": "Security audit results"
+          }
+        }
+      },
+      "RequestMetadata": {
+        "type": "object",
+        "required": ["id", "type", "attributes"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+            "description": "Metadata identifier in ULID format"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["RequestMetadatum"]
+          },
+          "attributes": {
+            "type": "object",
+            "required": ["key", "value"],
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Metadata key"
+              },
+              "value": {
+                "type": "string",
+                "description": "Metadata value"
+              }
+            }
+          }
+        }
+      },
+      "RequestData": {
+        "type": "object",
+        "required": ["headers", "authorization", "documentation"],
+        "properties": {
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Request headers"
+          },
+          "authorization": {
+            "$ref": "#/components/schemas/AuthorizationInfo"
+          },
+          "documentation": {
+            "type": "object",
+            "description": "Request documentation schema"
+          }
+        }
+      },
+      "AuthorizationInfo": {
+        "type": "object",
+        "required": ["detected", "key", "source", "type", "value"],
+        "properties": {
+          "detected": {
+            "type": "string",
+            "enum": ["yes", "no"],
+            "description": "Whether authorization was detected"
+          },
+          "key": {
+            "type": ["string", "null"],
+            "description": "Authorization key if detected"
+          },
+          "source": {
+            "type": "string",
+            "description": "Authorization source location"
+          },
+          "type": {
+            "type": ["string", "null"],
+            "description": "Authorization type if detected"
+          },
+          "value": {
+            "type": ["string", "null"],
+            "description": "Authorization value if detected"
+          }
+        }
+      },
+      "ResponseData": {
+        "type": "object",
+        "required": ["headers", "body", "documentation"],
+        "properties": {
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Response headers"
+          },
+          "body": {
+            "type": "object",
+            "description": "Response payload"
+          },
+          "documentation": {
+            "type": "object",
+            "description": "Response documentation schema"
+          }
+        }
+      },
+      "ServerInfo": {
+        "type": "object",
+        "required": ["name", "software", "ip", "protocol", "timezone", "city", "region", "country"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Server operating system"
+          },
+          "software": {
+            "type": "string",
+            "description": "Server software"
+          },
+          "ip": {
+            "type": "string",
+            "description": "Server IP address"
+          },
+          "protocol": {
+            "type": "string",
+            "description": "Server protocol"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Server timezone"
+          },
+          "city": {
+            "type": "string",
+            "description": "Server city location"
+          },
+          "region": {
+            "type": "string",
+            "description": "Server region location"
+          },
+          "country": {
+            "type": "string",
+            "description": "Server country location"
+          }
+        }
+      },
+      "ComplianceReport": {
+        "type": "object",
+        "required": ["name", "overall_percentage", "status", "categories"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Compliance report name"
+          },
+          "overall_percentage": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Overall compliance percentage"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pass", "Fail"],
+            "description": "Overall compliance status"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ComplianceCategory"
+            },
+            "description": "Compliance categories"
+          }
+        }
+      },
+      "ComplianceCategory": {
+        "type": "object",
+        "required": ["name", "label", "tests", "status", "percentage"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Category identifier"
+          },
+          "label": {
+            "type": "string",
+            "description": "Category display name"
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ComplianceTest"
+            },
+            "description": "Compliance tests in this category"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pass", "Fail"],
+            "description": "Category status"
+          },
+          "percentage": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Category compliance percentage"
+          }
+        }
+      },
+      "ComplianceTest": {
+        "type": "object",
+        "required": ["name", "description", "status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Test name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Test description"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pass", "Fail"],
+            "description": "Test result status"
+          }
+        }
+      },
+      "SecurityAudit": {
+        "type": "object",
+        "required": ["audit", "impact", "status", "description"],
+        "properties": {
+          "audit": {
+            "type": "string",
+            "description": "Security audit identifier and description"
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "Security impact level"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pass", "Fail"],
+            "description": "Audit result status"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed audit description (may contain HTML)"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Create a token in the Treblle Identity Dashboard under Developer settings (https://identity.treblle.com/developer-settings) and use it as a Bearer token."
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}

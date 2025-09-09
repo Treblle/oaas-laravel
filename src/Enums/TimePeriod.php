@@ -11,4 +11,5 @@ enum TimePeriod: string
     case LAST_WEEK = 'week,1';
     case LAST_14_DAYS = 'day,14';
     case LAST_MONTH = 'month,1';
+    case ALL = 'all';
 }

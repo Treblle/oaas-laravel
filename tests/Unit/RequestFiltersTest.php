@@ -119,6 +119,34 @@ class RequestFiltersTest extends TestCase
         $this->assertEquals($expected, $this->filters->toArray());
     }
 
+    public function test_where_time_range_sets_date_range_filters(): void
+    {
+        $this->filters->whereTimeRange('2025-09-01', '2025-09-30');
+
+        $expected = [
+            'filter[time_range_start]' => '2025-09-01',
+            'filter[time_range_end]' => '2025-09-30',
+            'filter[time_period]' => '-'
+        ];
+        $this->assertEquals($expected, $this->filters->toArray());
+    }
+
+    public function test_all_time_sets_all_time_period_filter(): void
+    {
+        $this->filters->allTime();
+
+        $expected = ['filter[time_period]' => 'all'];
+        $this->assertEquals($expected, $this->filters->toArray());
+    }
+
+    public function test_where_time_period_all_sets_all_time_filter(): void
+    {
+        $this->filters->whereTimePeriod(TimePeriod::ALL);
+
+        $expected = ['filter[time_period]' => 'all'];
+        $this->assertEquals($expected, $this->filters->toArray());
+    }
+
     public function test_with_problems_sets_has_problems_to_1(): void
     {
         $this->filters->withProblems();

@@ -80,6 +80,19 @@ class RequestFilters
         return $this;
     }
 
+    public function whereTimeRange(string $startDate, string $endDate): self
+    {
+        $this->filters['filter[time_range_start]'] = $startDate;
+        $this->filters['filter[time_range_end]'] = $endDate;
+        $this->filters['filter[time_period]'] = '-';
+        return $this;
+    }
+
+    public function allTime(): self
+    {
+        return $this->whereTimePeriod(TimePeriod::ALL);
+    }
+
     public function withProblems(): self
     {
         $this->filters['filter[has_problems]'] = 1;

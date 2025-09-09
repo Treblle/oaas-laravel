@@ -84,6 +84,31 @@ $requests = TreblleOaaS::requests('workspace-id', 'api-id')
     ->sortByLoadTimeSlowest()
     ->limit(10)
     ->get();
+
+// Custom time range filtering (alternative to whereTimePeriod)
+$requests = TreblleOaaS::requests('workspace-id', 'api-id')
+    ->whereCustomer('customer-123')
+    ->whereTimeRange('2025-09-01', '2025-09-30')
+    ->get();
+
+// Get all-time requests
+$requests = TreblleOaaS::requests('workspace-id', 'api-id')
+    ->whereCustomer('customer-123')
+    ->allTime()
+    ->get();
+
+// Search checkout requests for specific payment methods
+$requests = TreblleOaaS::requests('workspace-id', 'api-id')
+    ->whereCustomer('customer-123')
+    ->withParams('stripe') // Find requests with Stripe payment data
+    ->whereMethod(HttpMethod::POST)
+    ->get();
+
+// Find user registration attempts with Gmail addresses
+$requests = TreblleOaaS::requests('workspace-id', 'api-id')
+    ->whereCustomer('customer-123')
+    ->withParams('@gmail.com') // Partial match on email domains
+    ->get();
 ```
 
 ### Pagination
@@ -140,6 +165,8 @@ echo "Compliance Score: {$compliance['overall_percentage']}%" . PHP_EOL;
 | `whereClientError()` | Filter for 4xx responses |
 | `whereServerError()` | Filter for 5xx responses |
 | `whereTimePeriod(TimePeriod $period)` | Filter by time period |
+| `whereTimeRange(string $start, string $end)` | Filter by custom date range (YYYY-MM-DD format) |
+| `allTime()` | Get all requests regardless of time period |
 | `withProblems()` | Only requests with problems |
 | `withoutProblems()` | Only requests without problems |
 
