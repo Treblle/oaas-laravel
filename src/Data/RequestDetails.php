@@ -77,7 +77,7 @@ class RequestDetails implements JsonSerializable
             externalUserId: $attributes['external_user_id'],
             customerDisplayName: $attributes['customer_display_name'],
             externalTagId: $attributes['external_tag_id'],
-            endpoint: $attributes['endpoint'],
+            endpoint: $attributes['endpoint'] ?? [],
             problem: $attributes['problem'],
             metadata: $attributes['metadata'],
             request: $attributes['request'],

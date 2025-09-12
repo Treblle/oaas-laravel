@@ -88,7 +88,7 @@ $requests = TreblleOaaS::requests('workspace-id', 'api-id')
 // Custom time range filtering (alternative to whereTimePeriod)
 $requests = TreblleOaaS::requests('workspace-id', 'api-id')
     ->whereCustomer('customer-123')
-    ->whereTimeRange('2025-09-01', '2025-09-30')
+    ->whereTimeRange('2025-09-01 00:00:00', '2025-09-30 23:59:59')
     ->get();
 
 // Get all-time requests
@@ -165,7 +165,7 @@ echo "Compliance Score: {$compliance['overall_percentage']}%" . PHP_EOL;
 | `whereClientError()` | Filter for 4xx responses |
 | `whereServerError()` | Filter for 5xx responses |
 | `whereTimePeriod(TimePeriod $period)` | Filter by time period |
-| `whereTimeRange(string $start, string $end)` | Filter by custom date range (YYYY-MM-DD format) |
+| `whereTimeRange(string $start, string $end)` | Filter by custom date range (YYYY-MM-DD HH:MM:SS format) |
 | `allTime()` | Get all requests regardless of time period |
 | `withProblems()` | Only requests with problems |
 | `withoutProblems()` | Only requests without problems |

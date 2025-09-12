@@ -55,7 +55,7 @@ class RequestFilters
 
     public function whereHttpCode(int|string $httpCode): self
     {
-        $this->filters['filter[http_code]'] = $httpCode;
+        $this->filters['filter[http_codes]'] = $httpCode;
         return $this;
     }
 
@@ -82,9 +82,7 @@ class RequestFilters
 
     public function whereTimeRange(string $startDate, string $endDate): self
     {
-        $this->filters['filter[time_range_start]'] = $startDate;
-        $this->filters['filter[time_range_end]'] = $endDate;
-        $this->filters['filter[time_period]'] = '-';
+        $this->filters['filter[date_range]'] = $startDate . ',' . $endDate;
         return $this;
     }
 

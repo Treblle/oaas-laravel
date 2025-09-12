@@ -139,7 +139,7 @@
             }
           },
           {
-            "name": "filter[http_code]",
+            "name": "filter[http_codes]",
             "in": "query",
             "required": false,
             "schema": {
@@ -227,7 +227,7 @@
                 "-"
               ]
             },
-            "description": "Filter requests by time period. Set to '-' when using time_range_start and time_range_end filters.",
+            "description": "Filter requests by time period. Set to '-' when using date_range filter.",
             "examples": {
               "last_minute": {
                 "value": "minute,1",
@@ -263,33 +263,21 @@
               },
               "custom_range": {
                 "value": "-",
-                "summary": "Custom time range (use with time_range_start and time_range_end)"
+                "summary": "Custom date range (use with date_range parameter)"
               }
             }
           },
           {
-            "name": "filter[time_range_start]",
+            "name": "filter[date_range]",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
-              "format": "date",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$",
+              "description": "Date range in YYYY-MM-DD HH:MM:SS,YYYY-MM-DD HH:MM:SS format"
             },
-            "description": "Start date for custom time range filtering in YYYY-MM-DD format. Must be used together with time_range_end. When using this filter, set time_period to '-'.",
-            "example": "2025-09-01"
-          },
-          {
-            "name": "filter[time_range_end]",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date",
-              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-            },
-            "description": "End date for custom time range filtering in YYYY-MM-DD format. Must be used together with time_range_start. When using this filter, set time_period to '-'.",
-            "example": "2025-09-30"
+            "description": "Custom date range filtering with start and end datetime separated by comma. Format: YYYY-MM-DD HH:MM:SS,YYYY-MM-DD HH:MM:SS",
+            "example": "2025-09-01 00:00:00,2025-09-30 23:59:59"
           },
           {
             "name": "filter[has_problems]",
