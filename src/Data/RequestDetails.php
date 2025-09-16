@@ -83,8 +83,8 @@ class RequestDetails implements JsonSerializable
             request: $attributes['request'],
             response: $attributes['response'],
             server: $attributes['server'],
-            compliance: $attributes['compliance'],
-            securityData: $attributes['security_data'],
+            compliance: $attributes['compliance'] ?? [],
+            securityData: $attributes['security_data'] ?? [],
         );
     }
 
