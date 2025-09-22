@@ -11,13 +11,13 @@ class RequestSummary implements JsonSerializable
         private readonly string $id,
         private readonly string $type,
         private readonly string $path,
-        private readonly string $endpointPath,
+        private readonly ?string $endpointPath,
         private readonly string $method,
         private readonly int $httpCode,
         private readonly ?string $externalUserId,
         private readonly ?string $customerDisplayName,
-        private readonly string $location,
-        private readonly string $ipAddress,
+        private readonly ?string $location,
+        private readonly ?string $ipAddress,
         private readonly ?string $appName,
         private readonly array $formattedLoadTime,
         private readonly array $formattedResponseSize,
@@ -142,7 +142,7 @@ class RequestSummary implements JsonSerializable
         return $this->createdAt;
     }
 
-    public function getLocation(): string
+    public function getLocation(): ?string
     {
         return $this->location;
     }
