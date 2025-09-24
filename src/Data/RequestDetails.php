@@ -12,36 +12,36 @@ class RequestDetails implements JsonSerializable
         private readonly string $type,
         private readonly string $path,
         private readonly ?string $endpointPath,
-        private readonly array $pathVariables,
+        private readonly ?array $pathVariables,
         private readonly int $httpCode,
         private readonly string $method,
         private readonly array $device,
-        private readonly string $source,
-        private readonly string $threatLevel,
+        private readonly ?string $source,
+        private readonly ?string $threatLevel,
         private readonly bool $hasAuth,
         private readonly ?string $location,
         private readonly ?float $latitude,
         private readonly ?float $longitude,
         private readonly ?string $ipAddress,
-        private readonly string $appName,
+        private readonly ?string $appName,
         private readonly array $formattedLoadTime,
         private readonly array $formattedResponseSize,
-        private readonly string $requestUrl,
-        private readonly array $requestData,
+        private readonly ?string $requestUrl,
+        private readonly ?array $requestData,
         private readonly int $numberOfComments,
-        private readonly string $logFile,
+        private readonly ?string $logFile,
         private readonly DateTime $createdAt,
         private readonly ?string $externalUserId,
         private readonly ?string $customerDisplayName,
         private readonly ?string $externalTagId,
-        private readonly array $endpoint,
+        private readonly ?array $endpoint,
         private readonly ?array $problem,
-        private readonly array $metadata,
-        private readonly array $request,
-        private readonly array $response,
-        private readonly array $server,
-        private readonly array $compliance,
-        private readonly array $securityData,
+        private readonly ?array $metadata,
+        private readonly ?array $request,
+        private readonly ?array $response,
+        private readonly ?array $server,
+        private readonly ?array $compliance,
+        private readonly ?array $securityData,
     ) {
     }
 
@@ -77,14 +77,14 @@ class RequestDetails implements JsonSerializable
             externalUserId: $attributes['external_user_id'],
             customerDisplayName: $attributes['customer_display_name'],
             externalTagId: $attributes['external_tag_id'],
-            endpoint: $attributes['endpoint'] ?? [],
+            endpoint: $attributes['endpoint'],
             problem: $attributes['problem'],
             metadata: $attributes['metadata'],
             request: $attributes['request'],
             response: $attributes['response'],
             server: $attributes['server'],
-            compliance: $attributes['compliance'] ?? [],
-            securityData: $attributes['security_data'] ?? [],
+            compliance: $attributes['compliance'],
+            securityData: $attributes['security_data'],
         );
     }
 
@@ -133,17 +133,17 @@ class RequestDetails implements JsonSerializable
         return $this->response['body'] ?? [];
     }
 
-    public function getServerInfo(): array
+    public function getServerInfo(): ?array
     {
         return $this->server;
     }
 
-    public function getComplianceReport(): array
+    public function getComplianceReport(): ?array
     {
         return $this->compliance;
     }
 
-    public function getSecurityAudit(): array
+    public function getSecurityAudit(): ?array
     {
         return $this->securityData;
     }

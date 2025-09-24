@@ -22,17 +22,17 @@ class RequestSummary implements JsonSerializable
         private readonly array $formattedLoadTime,
         private readonly array $formattedResponseSize,
         private readonly bool $hasAuth,
-        private readonly string $threatLevel,
+        private readonly ?string $threatLevel,
         private readonly DateTime $createdAt,
         private readonly array $device,
         private readonly array $api,
         private readonly ?array $endpoint,
         private readonly ?array $pathVariables,
         private readonly ?array $requestData,
-        private readonly string $requestUrl,
+        private readonly ?string $requestUrl,
         private readonly ?string $source,
         private readonly int $numberOfComments,
-        private readonly string $logFile,
+        private readonly ?string $logFile,
         private readonly ?array $metadata,
         private readonly ?float $latitude,
         private readonly ?float $longitude,
@@ -63,7 +63,7 @@ class RequestSummary implements JsonSerializable
             createdAt: new DateTime($attributes['created_at']),
             device: $attributes['device'],
             api: $attributes['api'],
-            endpoint: $attributes['endpoint'],
+            endpoint: $attributes['endpoint'] ?? [],
             pathVariables: $attributes['path_variables'],
             requestData: $attributes['request_data'],
             requestUrl: $attributes['request_url'],
@@ -147,7 +147,7 @@ class RequestSummary implements JsonSerializable
         return $this->location;
     }
 
-    public function getThreatLevel(): string
+    public function getThreatLevel(): ?string
     {
         return $this->threatLevel;
     }
