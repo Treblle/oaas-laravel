@@ -457,7 +457,7 @@
           "endpoint_path", "external_user_id", "formatted_load_time", 
           "formatted_response_size", "has_auth", "http_code", "ip_address", 
           "latitude", "location", "log_file", "longitude", "metadata", 
-          "method", "number_of_comments", "path", "path_variables", 
+          "method", "path", "path_variables",
           "request_data", "request_url", "source", "threat_level"
         ],
         "properties": {
@@ -548,11 +548,6 @@
             "type": "string",
             "enum": ["Get", "Post", "Put", "Patch", "Delete", "Head", "Options"],
             "description": "HTTP method"
-          },
-          "number_of_comments": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of comments on this request"
           },
           "path": {
             "type": "string",
@@ -881,7 +876,7 @@
           "path", "endpoint_path", "path_variables", "http_code", "method",
           "device", "source", "threat_level", "has_auth", "location",
           "latitude", "longitude", "ip_address", "app_name", "formatted_load_time",
-          "formatted_response_size", "request_url", "request_data", "number_of_comments",
+          "formatted_response_size", "request_url", "request_data",
           "log_file", "created_at", "external_user_id", "customer_display_name",
           "external_tag_id", "endpoint", "problem", "metadata", "request", "response",
           "server", "compliance", "security_data"
@@ -969,11 +964,6 @@
           "request_data": {
             "type": "object",
             "description": "Request payload data"
-          },
-          "number_of_comments": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of comments on this request"
           },
           "log_file": {
             "type": "string",
