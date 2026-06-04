@@ -14,13 +14,26 @@ class OaaSServiceProvider extends ServiceProvider
         $this->app->singleton(OaaSClientInterface::class, function ($app) {
             return new OaaSClient(
                 apiToken: config('treblle-oaas.api_token'),
-                baseUrl: config('treblle-oaas.base_url'),
+                baseUrl: $this->resolveBaseUrl(config('treblle-oaas.base_url')),
                 timeout: config('treblle-oaas.timeout'),
                 connectTimeout: config('treblle-oaas.connect_timeout')
             );
         });
 
         $this->app->alias(OaaSClientInterface::class, 'treblle-oaas');
+    }
+
+    private function resolveBaseUrl(string $url): string
+    {
+        if ($url === 'https://api-forge.treblle.com/api/v1') {
+            trigger_error(
+                'The Treblle OaaS base URL has changed. Please update your published config or TREBLLE_OAAS_BASE_URL to https://api.treblle.com/v1',
+                E_USER_DEPRECATED
+            );
+            return 'https://api.treblle.com/v1';
+        }
+
+        return $url;
     }
 
     public function boot(): void

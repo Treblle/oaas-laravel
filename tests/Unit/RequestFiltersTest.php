@@ -75,7 +75,7 @@ class RequestFiltersTest extends TestCase
     {
         $this->filters->whereHttpCode(404);
 
-        $expected = ['filter[http_code]' => 404];
+        $expected = ['filter[http_codes]' => 404];
         $this->assertEquals($expected, $this->filters->toArray());
     }
 
@@ -83,7 +83,7 @@ class RequestFiltersTest extends TestCase
     {
         $this->filters->whereHttpCode('4xx');
 
-        $expected = ['filter[http_code]' => '4xx'];
+        $expected = ['filter[http_codes]' => '4xx'];
         $this->assertEquals($expected, $this->filters->toArray());
     }
 
@@ -91,7 +91,7 @@ class RequestFiltersTest extends TestCase
     {
         $this->filters->whereSuccessful();
 
-        $expected = ['filter[http_code]' => '2xx'];
+        $expected = ['filter[http_codes]' => '2xx'];
         $this->assertEquals($expected, $this->filters->toArray());
     }
 
@@ -99,7 +99,7 @@ class RequestFiltersTest extends TestCase
     {
         $this->filters->whereClientError();
 
-        $expected = ['filter[http_code]' => '4xx'];
+        $expected = ['filter[http_codes]' => '4xx'];
         $this->assertEquals($expected, $this->filters->toArray());
     }
 
@@ -107,7 +107,7 @@ class RequestFiltersTest extends TestCase
     {
         $this->filters->whereServerError();
 
-        $expected = ['filter[http_code]' => '5xx'];
+        $expected = ['filter[http_codes]' => '5xx'];
         $this->assertEquals($expected, $this->filters->toArray());
     }
 
@@ -124,9 +124,7 @@ class RequestFiltersTest extends TestCase
         $this->filters->whereTimeRange('2025-09-01', '2025-09-30');
 
         $expected = [
-            'filter[time_range_start]' => '2025-09-01',
-            'filter[time_range_end]' => '2025-09-30',
-            'filter[time_period]' => '-'
+            'filter[date_range]' => '2025-09-01,2025-09-30',
         ];
         $this->assertEquals($expected, $this->filters->toArray());
     }
@@ -261,7 +259,7 @@ class RequestFiltersTest extends TestCase
             'filter[external_user_id]' => 'customer-123',
             'filter[method]' => 'POST',
             'filter[device]' => 'iOS',
-            'filter[http_code]' => '2xx',
+            'filter[http_codes]' => '2xx',
             'filter[has_problems]' => 0,
             'sort' => '-load_time',
             'limit' => 15,

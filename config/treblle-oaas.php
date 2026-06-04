@@ -13,7 +13,7 @@ return [
 
     'api_token' => env('TREBLLE_OAAS_API_TOKEN'),
 
-    'base_url' => env('TREBLLE_OAAS_BASE_URL', 'https://api-forge.treblle.com/api/v1'),
+    'base_url' => env('TREBLLE_OAAS_BASE_URL', 'https://api.treblle.com/v1'),
 
     /*
     |--------------------------------------------------------------------------
